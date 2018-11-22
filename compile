@@ -1,0 +1,7 @@
+javac *.java
+cd Controller/
+javac *.java
+cd ../res/
+javac *.java
+cd ../View/
+javac *.java
