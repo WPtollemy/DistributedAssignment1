@@ -9,7 +9,7 @@ import res.*;
 public class SpaceController
 {
     private static int THREE_MINUTES      = 3000 * 60;
-    private static final long TWO_SECONDS = 2 * 1000;  // two thousand milliseconds
+    private static final long TWO_SECONDS = 2 * 1000;
     private JavaSpace05 space;
     private TransactionManager mgr;
 
@@ -75,9 +75,9 @@ public class SpaceController
     {
         Transaction.Created trc = null;
         try {
-             trc = TransactionFactory.create(mgr, 3000);
+            trc = TransactionFactory.create(mgr, 3000);
         } catch (Exception e) {
-             System.out.println("Could not create transaction " + e);;
+            System.out.println("Could not create transaction " + e);;
         }
 
         Transaction txn = trc.transaction; 
@@ -118,7 +118,7 @@ public class SpaceController
 
             if (existingUser != null)
                 return true;
-            
+
         }  catch ( Exception e) {
             e.printStackTrace();
         }
@@ -152,9 +152,9 @@ public class SpaceController
     {
         Transaction.Created trc = null;
         try {
-             trc = TransactionFactory.create(mgr, 3000);
+            trc = TransactionFactory.create(mgr, 3000);
         } catch (Exception e) {
-             System.out.println("Could not create transaction " + e);;
+            System.out.println("Could not create transaction " + e);;
         }
 
         Transaction txn = trc.transaction; 

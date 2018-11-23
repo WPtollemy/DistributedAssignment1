@@ -12,7 +12,6 @@ public class TopicCreator
     public void createTopic(String topicTitle)
     {
         WPTopic testing = new WPTopic(topicTitle, Main.getLoggedUser().name);
-        testing         = testing;
         spaceController.writeTopic(testing);
     }
 }

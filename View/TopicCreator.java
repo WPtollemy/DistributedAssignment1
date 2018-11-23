@@ -5,7 +5,6 @@ import res.WPTopic;
 
 public class TopicCreator extends JFrame
 {
-    private static int THREE_MINUTES = 3000 * 60;
     private Controller.TopicCreator topicCreatorController;
 
     private JTextField titleIn, topicTitleIn;

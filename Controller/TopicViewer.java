@@ -16,7 +16,6 @@ public class TopicViewer
     {
         WPTopic testing = new WPTopic();
         testing.title   = topicTitle;
-        testing         = testing;
 
         WPTopic topic = spaceController.readTopic(testing);
 

@@ -5,7 +5,6 @@ import res.WPTopic;
 
 public class Register extends JFrame
 {
-    private static int THREE_MINUTES = 3000 * 60;
     private Controller.Register registerController;
 
     private JTextField userIn, passIn;
@@ -78,7 +77,9 @@ public class Register extends JFrame
         String username = userIn.getText();
         String password = passIn.getText();
 
-        registerController.validUser(username, password);
+        if (!registerController.validUser(username, password))
+            return;
+
         registerController.registerUser(username, password);
     }
 

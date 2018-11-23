@@ -22,6 +22,7 @@ public class Register
     {
         WPUser user = new WPUser(username, password);
 
+        // Check the user doesn't exist before creating one
         if (this.validUser(username, password))
             spaceController.writeUser(user);
 
