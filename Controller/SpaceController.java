@@ -75,11 +75,25 @@ public class SpaceController
         topicsTpl.add(topicTpl);
 
         ArrayList<WPTopic> topicList = new ArrayList<WPTopic>();
-        topicList.addAll(space.take(topicsTpl, txn, TWO_SECONDS, 50));
+        try {
+            topicList.addAll(space.take(topicsTpl, txn, TWO_SECONDS, 50));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ArrayList<String> topicTitles = new ArrayList<String>();
         for (WPTopic topic : topicList) {
             topicTitles.add(topic.title);
+        }
+
+        try {
+            for(WPTopic topic : topicList) {
+                space.write(topic, txn, TWO_SECONDS);
+            }
+
+            txn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return topicTitles;

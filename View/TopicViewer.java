@@ -1,5 +1,6 @@
 package View;
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import res.WPTopic;
 
@@ -51,8 +52,7 @@ public class TopicViewer extends JFrame {
 		jobLabel.setText ("Topic: ");
 		jPanel1.add (jobLabel);
 
-        String[] listTopics = getTopicList();
-        topicList = new JComboBox(listTopics);
+        topicList = new JComboBox(getTopicList());
         jPanel1.add(topicList);
 
         JButton showTopicButton = new JButton();
@@ -139,8 +139,11 @@ public class TopicViewer extends JFrame {
 
     private String[] getTopicList()
     {
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
-        return petStrings;
+        ArrayList<String> listTopics = topicViewerController.getTopicList();
+
+        String[] topics = new String[listTopics.size()];
+        topics = listTopics.toArray(topics);
+        return topics;
     }
 
     public static void main(String[] args) {

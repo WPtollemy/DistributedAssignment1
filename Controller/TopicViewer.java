@@ -1,6 +1,7 @@
 package Controller;
 import Controller.Main;
 import Controller.SpaceController;
+import java.util.ArrayList;
 import res.WPMessage;
 import res.WPTopic;
 
@@ -37,7 +38,7 @@ public class TopicViewer
         return newMessage.messageOwner + ": " + newMessage.message; 
     }
 
-    public String[] getTopicList()
+    public ArrayList<String> getTopicList()
     {
         return spaceController.getTopicList();
     }
