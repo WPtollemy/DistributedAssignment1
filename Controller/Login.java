@@ -17,8 +17,17 @@ public class Login
         return spaceController.doesUserExist(user);    
     }
 
-    public void loginUser()
+    public void loginUser(String username, String password)
     {
+        WPUser user = new WPUser(username, password);
+
+        if (!validUser(username, password)){
+            return;
+        }
+
+        WPUser toLogUser = spaceController.readUser(user);
+        Main.logUserIn(toLogUser);
+
         Lobby lobby = new Lobby(); 
         lobby.setVisible(true);
     }

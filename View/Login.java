@@ -79,7 +79,7 @@ public class Login extends JFrame
             return;
         }
 
-        this.loginController.loginUser();
+        this.loginController.loginUser(username, password);
         this.setVisible(false);
     }
 

@@ -46,6 +46,18 @@ public class SpaceController
         }
     }
 
+    public WPUser readUser(WPUser user)
+    {
+        try {
+            WPUser loggedUser = (WPUser)space.readIfExists( user, null, THREE_MINUTES);
+            return loggedUser;
+        }  catch ( Exception e) {
+            e.printStackTrace();
+        }
+
+        return user = new WPUser();
+    }
+
     public WPTopic readTopic(WPTopic topic)
     {
         try {

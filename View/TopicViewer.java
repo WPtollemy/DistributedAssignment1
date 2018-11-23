@@ -74,9 +74,9 @@ public class TopicViewer extends JFrame
 		JPanel jPanel3 = new JPanel();
 		jPanel3.setLayout (new FlowLayout ());
 
-		JLabel printerNameLabel = new JLabel();
-		printerNameLabel.setText ("Add Comment: ");
-		jPanel3.add (printerNameLabel);
+		JLabel addCommentLabel = new JLabel();
+		addCommentLabel.setText ("Add Comment: ");
+		jPanel3.add (addCommentLabel);
 
 		newComment = new JTextField (12);
 		newComment.setText ("");

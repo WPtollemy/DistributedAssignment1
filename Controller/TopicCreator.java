@@ -9,9 +9,9 @@ public class TopicCreator
     {
     }
 
-    public void createTopic(String topicTitle, String topicOwner)
+    public void createTopic(String topicTitle)
     {
-        WPTopic testing = new WPTopic(topicTitle, topicOwner);
+        WPTopic testing = new WPTopic(topicTitle, Main.getLoggedUser().name);
         testing         = testing;
         spaceController.writeTopic(testing);
     }

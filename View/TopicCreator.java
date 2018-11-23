@@ -47,14 +47,6 @@ public class TopicCreator extends JFrame
         JPanel jPanel2 = new JPanel();
         jPanel2.setLayout (new FlowLayout ());
 
-        JLabel printerNameLabel = new JLabel();
-        printerNameLabel.setText ("Topic Owner ");
-        jPanel2.add (printerNameLabel);
-
-        topicTitleIn = new JTextField (12);
-        topicTitleIn.setText ("");
-        jPanel2.add (topicTitleIn);
-
         //South panel
         JPanel jPanel3 = new JPanel();
         jPanel3.setLayout (new FlowLayout ());
@@ -76,9 +68,8 @@ public class TopicCreator extends JFrame
 
     private void createTopic(java.awt.event.ActionEvent evt)
     {
-        String topicTitle     = titleIn.getText();
-        String topicOwnerName = topicTitleIn.getText();
-        this.topicCreatorController.createTopic(topicTitle, topicOwnerName);
+        String topicTitle = titleIn.getText();
+        this.topicCreatorController.createTopic(topicTitle);
     }
 
     public static void main(String[] args) {
