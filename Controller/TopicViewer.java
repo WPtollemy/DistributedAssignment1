@@ -12,7 +12,7 @@ public class TopicViewer
     {
         spaceController = new SpaceController();
     }
-    
+
     public WPTopic findTopic(String topicTitle)
     {
         WPTopic testing = new WPTopic();
@@ -22,28 +22,33 @@ public class TopicViewer
         WPTopic topic = spaceController.readTopic(testing);
 
         return topic;
-   }
+    }
 
-   public String findTopicMessage(WPTopic topic)
-   {
-       WPMessage message = new WPMessage();
-       message.topic     = topic.title;
+    public String findTopicMessage(WPTopic topic)
+    {
+        WPMessage message = new WPMessage();
+        message.topic     = topic.title;
 
-       WPMessage newMessage = spaceController.getMessage(message);
+        WPMessage newMessage = spaceController.getMessage(message);
 
-       if (null == newMessage)
-           return "";
+        if (null == newMessage)
+            return "";
 
-       return newMessage.messageOwner + ": " + newMessage.message; 
-   }
+        return newMessage.messageOwner + ": " + newMessage.message; 
+    }
 
-   public void addMessage(String topicTitle, String content)
-   {
-       WPMessage message    = new WPMessage();
-       message.topic        = topicTitle;
-       message.message      = content;
-       message.messageOwner = Main.getLoggedUser().name;
+    public String[] getTopicList()
+    {
+        return spaceController.getTopicList();
+    }
 
-       spaceController.writeMessage(message);
-   }
+    public void addMessage(String topicTitle, String content)
+    {
+        WPMessage message    = new WPMessage();
+        message.topic        = topicTitle;
+        message.message      = content;
+        message.messageOwner = Main.getLoggedUser().name;
+
+        spaceController.writeMessage(message);
+    }
 }

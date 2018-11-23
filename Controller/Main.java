@@ -1,7 +1,8 @@
 package Controller;
-import res.WPUser;
 import View.Login;
+import javax.swing.*;
 import res.Lookup.Panels;
+import res.WPUser;
 
 public class Main
 {

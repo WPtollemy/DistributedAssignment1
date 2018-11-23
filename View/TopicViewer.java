@@ -1,13 +1,14 @@
 package View;
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 import res.WPTopic;
 
 public class TopicViewer extends JFrame {
 
     private static final long TWO_SECONDS = 2 * 1000;  // two thousand milliseconds
 
-	private JTextField topicTitleIn, newComment;
+    private JComboBox topicList;
+	private JTextField newComment;
     private JTextArea jobList;
     private String topicName;
     private Controller.TopicViewer topicViewerController;
@@ -50,19 +51,19 @@ public class TopicViewer extends JFrame {
 		jobLabel.setText ("Topic: ");
 		jPanel1.add (jobLabel);
 
-		topicTitleIn = new JTextField (12);
-		topicTitleIn.setText ("");
-		jPanel1.add (topicTitleIn);
+        String[] listTopics = getTopicList();
+        topicList = new JComboBox(listTopics);
+        jPanel1.add(topicList);
 
-        JButton findTopicButton = new JButton();
-        findTopicButton.setText("Find Topic");
-        findTopicButton.addActionListener (new java.awt.event.ActionListener () {
+        JButton showTopicButton = new JButton();
+        showTopicButton.setText("Show Topic");
+        showTopicButton.addActionListener (new java.awt.event.ActionListener () {
             public void actionPerformed (java.awt.event.ActionEvent evt) {
-                findTopic (evt);
+                showTopic (evt);
             }
         }  );
 
-        jPanel1.add(findTopicButton);
+        jPanel1.add(showTopicButton);
 
         //Center Panel to view comments
 		JPanel jPanel2 = new JPanel();
@@ -98,9 +99,9 @@ public class TopicViewer extends JFrame {
         cp.add (jPanel3, "South");
     }
 
-    private void findTopic(java.awt.event.ActionEvent evt)
+    private void showTopic(java.awt.event.ActionEvent evt)
     {
-        this.topicName = topicTitleIn.getText();
+        this.topicName = (String)topicList.getSelectedItem();
         WPTopic topic = topicViewerController.findTopic(this.topicName);
 
         //Handle errors
@@ -132,8 +133,14 @@ public class TopicViewer extends JFrame {
 
     private void addMessage(java.awt.event.ActionEvent evt)
     {
-        this.topicName = topicTitleIn.getText();
+        this.topicName = (String)topicList.getSelectedItem();
         topicViewerController.addMessage(this.topicName, newComment.getText());
+    }
+
+    private String[] getTopicList()
+    {
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+        return petStrings;
     }
 
     public static void main(String[] args) {
