@@ -7,8 +7,7 @@ public class TopicCreator extends JFrame
 {
     private Controller.TopicCreator topicCreatorController;
 
-    private JTextField titleIn, topicTitleIn;
-    private JTextField printerNameIn;
+    private JTextField titleIn;
 
     public TopicCreator()
     {

@@ -49,7 +49,7 @@ public class SpaceController
     public WPUser readUser(WPUser user)
     {
         try {
-            WPUser loggedUser = (WPUser)space.readIfExists( user, null, THREE_MINUTES);
+            WPUser loggedUser = (WPUser)space.readIfExists( user, null, TWO_SECONDS);
             return loggedUser;
         }  catch ( Exception e) {
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class SpaceController
 
         try {
             for(WPMessage message : messageList) {
-                space.write(message, txn, TWO_SECONDS);
+                space.write(message, txn, THREE_MINUTES);
             }
 
             txn.commit();

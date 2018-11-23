@@ -6,9 +6,10 @@ import res.WPTopic;
 
 public class TopicViewer extends JFrame
 {
-    private JComboBox topicList;
+    private JComboBox<String> topicList;
 	private JTextField newComment;
-    private JTextArea jobList;
+    private JList<String> messageList;
+
     private String topicName;
     private Controller.TopicViewer topicViewerController;
 
@@ -50,7 +51,7 @@ public class TopicViewer extends JFrame
 		jobLabel.setText ("Topic: ");
 		jPanel1.add (jobLabel);
 
-        topicList = new JComboBox(getTopicList());
+        topicList = new JComboBox<String>(getTopicList());
         jPanel1.add(topicList);
 
         JButton showTopicButton = new JButton();
@@ -67,8 +68,10 @@ public class TopicViewer extends JFrame
 		JPanel jPanel2 = new JPanel();
 		jPanel2.setLayout (new FlowLayout ());
 
-        jobList = new JTextArea(30,30);
-        jPanel2.add(jobList);
+        messageList = new JList<String>();
+        messageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        messageList.setLayoutOrientation(JList.VERTICAL);
+        jPanel2.add(messageList);
 
         //South Panel to add comments
 		JPanel jPanel3 = new JPanel();
@@ -92,6 +95,7 @@ public class TopicViewer extends JFrame
 
         jPanel3.add(addMessageButton);
 
+
         cp.add (jPanel1, "North");
         cp.add (jPanel2, "Center");
         cp.add (jPanel3, "South");
@@ -110,10 +114,16 @@ public class TopicViewer extends JFrame
 
         setTitle ("Topic: " + this.topicName);
 
+        //Clear message list then update
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
         for(String message : this.getMessageList()) {
-            jobList.append(new String(message + "\n"));
+            listModel.addElement(new String(message + "\n"));
+            //messageList.append(new String(message + "\n"));
         }
-        jobList.update(jobList.getGraphics());
+        messageList.update(messageList.getGraphics());
+        messageList.updateUI();
+        messageList.setVisibleRowCount(listModel.size());
+        messageList.setModel(listModel);
     }
 
     private void addMessage(java.awt.event.ActionEvent evt)
@@ -121,10 +131,16 @@ public class TopicViewer extends JFrame
         this.topicName = (String)topicList.getSelectedItem();
         topicViewerController.addMessage(this.topicName, newComment.getText());
 
+        //Clear message list then update
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
         for(String message : this.getMessageList()) {
-            jobList.append(new String(message + "\n"));
+            listModel.addElement(new String(message + "\n"));
+            //messageList.append(new String(message + "\n"));
         }
-        jobList.update(jobList.getGraphics());
+        messageList.update(messageList.getGraphics());
+        messageList.updateUI();
+        messageList.setVisibleRowCount(listModel.size());
+        messageList.setModel(listModel);
     }
 
     private String[] getTopicList()
