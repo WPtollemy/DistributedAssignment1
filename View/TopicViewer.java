@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import javax.swing.*;
 import res.WPTopic;
 
-public class TopicViewer extends JFrame {
-
-    private static final long TWO_SECONDS = 2 * 1000;  // two thousand milliseconds
-
+public class TopicViewer extends JFrame
+{
     private JComboBox topicList;
 	private JTextField newComment;
     private JTextArea jobList;
@@ -85,7 +83,7 @@ public class TopicViewer extends JFrame {
 		jPanel3.add (newComment);
 
         JButton addMessageButton = new JButton();
-        addMessageButton.setText("Find Topic");
+        addMessageButton.setText("Add");
         addMessageButton.addActionListener (new java.awt.event.ActionListener () {
             public void actionPerformed (java.awt.event.ActionEvent evt) {
                 addMessage (evt);
@@ -106,35 +104,27 @@ public class TopicViewer extends JFrame {
 
         //Handle errors
         if (null == topic) {
-            System.out.println("null topic found");
+            System.out.println("null topic found: " + this.topicName);
             return;
         }
 
         setTitle ("Topic: " + this.topicName);
 
-        while(true)
-        {
-            try {
-                String topicPost = topicViewerController.findTopicMessage(topic);
-                if (topicPost == null ||
-                        jobList.getText().toLowerCase().contains(topicPost.toLowerCase())
-                   ) {
-                    // no print job was found, so sleep for a couple of seconds and try again
-                    Thread.sleep(TWO_SECONDS);
-                } else {
-                    jobList.append(new String("Title: " + topicPost + "\n"));
-                    jobList.update(jobList.getGraphics());
-                }
-            }  catch ( Exception e) {
-                e.printStackTrace();
-            }
+        for(String message : this.getMessageList()) {
+            jobList.append(new String(message + "\n"));
         }
+        jobList.update(jobList.getGraphics());
     }
 
     private void addMessage(java.awt.event.ActionEvent evt)
     {
         this.topicName = (String)topicList.getSelectedItem();
         topicViewerController.addMessage(this.topicName, newComment.getText());
+
+        for(String message : this.getMessageList()) {
+            jobList.append(new String(message + "\n"));
+        }
+        jobList.update(jobList.getGraphics());
     }
 
     private String[] getTopicList()
@@ -144,6 +134,15 @@ public class TopicViewer extends JFrame {
         String[] topics = new String[listTopics.size()];
         topics = listTopics.toArray(topics);
         return topics;
+    }
+
+    private String[] getMessageList()
+    {
+        ArrayList<String> listMessages = topicViewerController.getMessageList(this.topicName);
+
+        String[] messages = new String[listMessages.size()];
+        messages = listMessages.toArray(messages);
+        return messages;
     }
 
     public static void main(String[] args) {

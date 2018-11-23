@@ -43,6 +43,11 @@ public class TopicViewer
         return spaceController.getTopicList();
     }
 
+    public ArrayList<String> getMessageList(String topicTitle)
+    {
+        return spaceController.getMessageList(topicTitle);
+    }
+
     public void addMessage(String topicTitle, String content)
     {
         WPMessage message    = new WPMessage();

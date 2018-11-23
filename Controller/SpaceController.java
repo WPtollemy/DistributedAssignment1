@@ -49,9 +49,9 @@ public class SpaceController
     public WPTopic readTopic(WPTopic topic)
     {
         try {
-            WPTopic nextJob = (WPTopic)space.readIfExists(topic,null, TWO_SECONDS);
+            WPTopic foundTopic = (WPTopic)space.readIfExists(topic,null, TWO_SECONDS);
 
-            return nextJob;
+            return foundTopic;
         }  catch ( Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class SpaceController
 
         try {
             for(WPTopic topic : topicList) {
-                space.write(topic, txn, TWO_SECONDS);
+                space.write(topic, txn, THREE_MINUTES);
             }
 
             txn.commit();
@@ -134,5 +134,46 @@ public class SpaceController
         }
 
         return message = new WPMessage();
+    }
+
+    public ArrayList<String> getMessageList(String topicTitle)
+    {
+        Transaction.Created trc = null;
+        try {
+             trc = TransactionFactory.create(mgr, 3000);
+        } catch (Exception e) {
+             System.out.println("Could not create transaction " + e);;
+        }
+
+        Transaction txn = trc.transaction; 
+
+        WPMessage messageTpl = new WPMessage();
+        messageTpl.topic = topicTitle;
+        ArrayList<WPMessage> messagesTpl = new ArrayList<WPMessage>();
+        messagesTpl.add(messageTpl);
+
+        ArrayList<WPMessage> messageList = new ArrayList<WPMessage>();
+        try {
+            messageList.addAll(space.take(messagesTpl, txn, TWO_SECONDS, 50));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> messageTitles = new ArrayList<String>();
+        for (WPMessage message : messageList) {
+            messageTitles.add(message.messageOwner + ": " + message.message);
+        }
+
+        try {
+            for(WPMessage message : messageList) {
+                space.write(message, txn, TWO_SECONDS);
+            }
+
+            txn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return messageTitles;
     }
 }
