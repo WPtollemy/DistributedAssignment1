@@ -1,5 +1,6 @@
 package Controller;
 import View.Lobby;
+import View.Register;
 import res.WPUser;
 
 public class Login 
@@ -30,5 +31,11 @@ public class Login
 
         Lobby lobby = new Lobby(); 
         lobby.setVisible(true);
+    }
+
+    public void registerUser()
+    {
+        Register register = Register.getInstance();
+        register.setVisible(true);
     }
 }

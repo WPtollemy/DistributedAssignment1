@@ -25,6 +25,7 @@ public class Main
 
     public static void changeScreen(int screenId)
     {
+        /**/
         switch (screenId) {
             case Panels.LOGIN_ID:
                 //Swap in login panel
@@ -45,5 +46,6 @@ public class Main
                 //Swap in login panel
                 break;
         }
+        /**/
     }
 }

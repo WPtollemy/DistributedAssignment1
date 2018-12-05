@@ -12,7 +12,7 @@ public class Lobby extends JFrame
     {
         this.lobbyController = new Controller.Lobby();
         initComponents();
-        this.setSize(500,500);
+        this.setSize(300,300);
     }
 
     private void initComponents ()
@@ -20,7 +20,7 @@ public class Lobby extends JFrame
         setTitle ("Main Menu");
         addWindowListener (new java.awt.event.WindowAdapter () {
             public void windowClosing (java.awt.event.WindowEvent evt) {
-                System.exit (0);
+                System.exit(0);
             }
         }   );
 
@@ -60,13 +60,11 @@ public class Lobby extends JFrame
     private void createTopic(java.awt.event.ActionEvent evt)
     {
         this.lobbyController.createTopic();
-        this.createTopicButton.setEnabled(false);
     }
 
     private void searchTopic(java.awt.event.ActionEvent evt)
     {
         this.lobbyController.findTopic();
-        this.searchTopicButton.setEnabled(false);
     }
 
     public static void main(String[] args) {

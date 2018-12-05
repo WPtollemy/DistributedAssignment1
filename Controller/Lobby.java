@@ -10,13 +10,13 @@ public class Lobby
 
     public void createTopic()
     {
-        TopicCreator topicCreator = new TopicCreator();
+        TopicCreator topicCreator = TopicCreator.getInstance();
         topicCreator.setVisible(true);
     }
 
     public void findTopic()
     {
-        TopicViewer topicViewer = new TopicViewer();
+        TopicViewer topicViewer = TopicViewer.getInstance();
         topicViewer.setVisible(true);
     }
 }

@@ -148,7 +148,7 @@ public class SpaceController
         return message = new WPMessage();
     }
 
-    public ArrayList<String> getMessageList(String topicTitle)
+    public ArrayList<WPMessage> getMessageList(String topicTitle)
     {
         Transaction.Created trc = null;
         try {
@@ -171,11 +171,6 @@ public class SpaceController
             e.printStackTrace();
         }
 
-        ArrayList<String> messageTitles = new ArrayList<String>();
-        for (WPMessage message : messageList) {
-            messageTitles.add(message.messageOwner + ": " + message.message);
-        }
-
         try {
             for(WPMessage message : messageList) {
                 space.write(message, txn, THREE_MINUTES);
@@ -186,6 +181,6 @@ public class SpaceController
             e.printStackTrace();
         }
 
-        return messageTitles;
+        return messageList;
     }
 }

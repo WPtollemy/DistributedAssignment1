@@ -6,6 +6,8 @@ import res.WPTopic;
 
 public class TopicViewer extends JFrame
 {
+    private static TopicViewer instance = new TopicViewer();
+
     private JComboBox<String> topicList;
 	private JTextField newComment;
     private JList<String> messageList;
@@ -13,11 +15,16 @@ public class TopicViewer extends JFrame
     private String topicName;
     private Controller.TopicViewer topicViewerController;
 
-    public TopicViewer()
+    public static TopicViewer getInstance()
+    {
+        return instance;
+    }
+
+    private TopicViewer()
     {
         topicViewerController = new Controller.TopicViewer();
 
-        this.topicName = "Enter a topic";
+        this.topicName = "Select a topic";
         initComponents ();
         pack ();
         setVisible(true);
@@ -31,14 +38,9 @@ public class TopicViewer extends JFrame
         setVisible(true);
     }
 
-    private void initComponents () {
+    private void initComponents ()
+    {
         setTitle (this.topicName);
-
-        addWindowListener (new java.awt.event.WindowAdapter () {
-            public void windowClosing (java.awt.event.WindowEvent evt) {
-                System.exit(0);
-            }
-        }   );
 
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());
@@ -71,7 +73,12 @@ public class TopicViewer extends JFrame
         messageList = new JList<String>();
         messageList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         messageList.setLayoutOrientation(JList.VERTICAL);
-        jPanel2.add(messageList);
+
+        JScrollPane listScroller = new JScrollPane(messageList);
+        listScroller.setPreferredSize(new Dimension(250, 80));
+        jPanel2.add(listScroller, BorderLayout.CENTER);
+        jPanel2.revalidate();
+        jPanel2.repaint();
 
         //South Panel to add comments
 		JPanel jPanel3 = new JPanel();

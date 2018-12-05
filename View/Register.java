@@ -5,26 +5,30 @@ import res.WPTopic;
 
 public class Register extends JFrame
 {
+    private static Register instance = new Register();
+
     private Controller.Register registerController;
 
     private JTextField userIn, passIn;
+    private JLabel errorLabel;
 
-    public Register()
+    public static Register getInstance()
+    {
+        return instance;
+    }
+
+    private Register()
     {
         registerController = new Controller.Register();
 
         initComponents ();
+        this.setSize(300,150);
         pack ();
     }
 
     private void initComponents()
     {
         setTitle ("Create an account");
-        addWindowListener (new java.awt.event.WindowAdapter () {
-            public void windowClosing (java.awt.event.WindowEvent evt) {
-                System.exit (0);
-            }
-        }   );
 
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());
@@ -33,17 +37,21 @@ public class Register extends JFrame
         JPanel jPanel1 = new JPanel();
         jPanel1.setLayout (new FlowLayout ());
 
-        JLabel userLabel = new JLabel();
-        userLabel.setText ("Username: ");
-        jPanel1.add (userLabel);
-
-        userIn = new JTextField (12);
-        userIn.setText ("");
-        jPanel1.add (userIn);
+        errorLabel = new JLabel();
+        errorLabel.setText ("");
+        jPanel1.add (errorLabel);
 
         //Center panel
         JPanel jPanel2 = new JPanel();
-        jPanel2.setLayout (new FlowLayout ());
+        jPanel2.setLayout (new GridLayout (2, 2, 5, 5));
+
+        JLabel userLabel = new JLabel();
+        userLabel.setText ("Username: ");
+        jPanel2.add (userLabel);
+
+        userIn = new JTextField (12);
+        userIn.setText ("");
+        jPanel2.add (userIn);
 
         JLabel passLabel = new JLabel();
         passLabel.setText ("Password ");
@@ -77,10 +85,17 @@ public class Register extends JFrame
         String username = userIn.getText();
         String password = passIn.getText();
 
-        if (!registerController.validUser(username, password))
+        if (!registerController.validUser(username, password)) {
+            // TODO Get actual error messages
+            this.errorLabel.setText("Invalid User");            
+            this.errorLabel.setForeground(Color.red);
+            pack();
             return;
+        }
 
         registerController.registerUser(username, password);
+        JOptionPane.showMessageDialog(null, "Account Created");
+        this.instance.setVisible(false);
     }
 
     public static void main(String[] args) {

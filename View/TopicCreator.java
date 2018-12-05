@@ -5,11 +5,18 @@ import res.WPTopic;
 
 public class TopicCreator extends JFrame
 {
+    private static TopicCreator instance = new TopicCreator();
+
     private Controller.TopicCreator topicCreatorController;
 
     private JTextField titleIn;
 
-    public TopicCreator()
+    public static TopicCreator getInstance()
+    {
+        return instance;
+    }
+
+    private TopicCreator()
     {
         topicCreatorController = new Controller.TopicCreator();
 
@@ -20,11 +27,6 @@ public class TopicCreator extends JFrame
     private void initComponents()
     {
         setTitle ("Topic Creator");
-        addWindowListener (new java.awt.event.WindowAdapter () {
-            public void windowClosing (java.awt.event.WindowEvent evt) {
-                System.exit (0);
-            }
-        }   );
 
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());

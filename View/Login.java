@@ -12,16 +12,12 @@ public class Login extends JFrame
         this.loginController = new Controller.Login();
         initComponents();
         this.setSize(450,150);
+        pack();
     }
 
     private void initComponents ()
     {
         setTitle ("Login");
-        addWindowListener (new java.awt.event.WindowAdapter () {
-            public void windowClosing (java.awt.event.WindowEvent evt) {
-                System.exit (0);
-            }
-        }   );
 
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());
@@ -32,7 +28,7 @@ public class Login extends JFrame
 
         //Center Panel to view comments
         JPanel jPanel2 = new JPanel();
-        jPanel2.setLayout(new BoxLayout(jPanel2, BoxLayout.Y_AXIS));
+        jPanel2.setLayout (new GridLayout (2, 2, 5, 5));
 
         JLabel userLabel = new JLabel();
         userLabel.setText ("Username: ");
@@ -43,12 +39,16 @@ public class Login extends JFrame
         jPanel2.add (userIn);
 
         JLabel passLabel = new JLabel();
-        passLabel.setText ("Password: ");
+        passLabel.setText ("Password ");
         jPanel2.add (passLabel);
 
         passIn = new JTextField (12);
         passIn.setText ("");
         jPanel2.add (passIn);
+
+        //South Panel to add comments
+        JPanel jPanel3 = new JPanel();
+        jPanel3.setLayout (new FlowLayout ());
 
         JButton loginButton = new JButton();
         loginButton.setText("Login");
@@ -58,11 +58,17 @@ public class Login extends JFrame
             }
         }  );
 
-        jPanel2.add(loginButton);
+        jPanel3.add(loginButton);
 
-        //South Panel to add comments
-        JPanel jPanel3 = new JPanel();
-        jPanel3.setLayout (new FlowLayout ());
+        JButton registerButton = new JButton();
+        registerButton.setText("Register");
+        registerButton.addActionListener (new java.awt.event.ActionListener () {
+            public void actionPerformed (java.awt.event.ActionEvent evt) {
+                register(evt);
+            }
+        }  );
+
+        jPanel3.add(registerButton);
 
 
         cp.add (jPanel1, "North");
@@ -81,6 +87,11 @@ public class Login extends JFrame
 
         this.loginController.loginUser(username, password);
         this.setVisible(false);
+    }
+
+    private void register(java.awt.event.ActionEvent evt)
+    {
+        this.loginController.registerUser();
     }
 
     public static void main(String[] args) {

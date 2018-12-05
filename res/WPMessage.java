@@ -4,6 +4,7 @@ import net.jini.core.entry.*;
 public class WPMessage implements Entry
 {
     public String topic, messageOwner, message;
+    public Boolean isPrivate = false;
 
     public WPMessage()
     {
