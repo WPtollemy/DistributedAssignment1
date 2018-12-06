@@ -39,11 +39,36 @@ public class SpaceController
 
     public void writeUser(WPUser user)
     {
+        Transaction.Created trc = null;
         try {
-            space.write( user, null, THREE_MINUTES);
+            trc = TransactionFactory.create(mgr, 3000);
+        } catch (Exception e) {
+            System.out.println("Could not create transaction " + e);;
+        }
+
+        Transaction txn = trc.transaction; 
+
+        WPUser existingUser = null;
+        try {
+            existingUser = (WPUser)space.readIfExists(user, txn, TWO_SECONDS);
         }  catch ( Exception e) {
             e.printStackTrace();
         }
+
+        if (existingUser == null){
+            try {
+                space.write( user, txn, THREE_MINUTES);
+            }  catch ( Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            txn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public WPUser readUser(WPUser user)

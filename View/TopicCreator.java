@@ -1,7 +1,6 @@
 package View;
 import java.awt.*;
 import javax.swing.*;
-import res.WPTopic;
 
 public class TopicCreator extends JFrame
 {

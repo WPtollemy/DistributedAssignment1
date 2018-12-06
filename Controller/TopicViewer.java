@@ -49,8 +49,8 @@ public class TopicViewer
         for (WPMessage message : messageList) {
             //Ensure the logged in user doesn't see all messages
             if (message.isPrivate && 
-                    message.messageOwner != Main.getLoggedUser().name &&
-                    selectedTopic.topicOwner != Main.getLoggedUser().name
+                    (!message.messageOwner.equals(Main.getLoggedUser().name) &&
+                    !selectedTopic.topicOwner.equals(Main.getLoggedUser().name))
                ){
                 continue;
                }
@@ -61,12 +61,13 @@ public class TopicViewer
         return messageTitles;
     }
 
-    public void addMessage(String topicTitle, String content)
+    public void addMessage(String topicTitle, String content, Boolean isPrivate)
     {
         WPMessage message    = new WPMessage();
         message.topic        = topicTitle;
         message.message      = content;
         message.messageOwner = Main.getLoggedUser().name;
+        message.isPrivate    = isPrivate;
 
         spaceController.writeMessage(message);
     }
