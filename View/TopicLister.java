@@ -44,7 +44,7 @@ public class TopicLister extends JFrame
         createTopicButton.setText("Create Topic");
         createTopicButton.addActionListener (new java.awt.event.ActionListener () {
             public void actionPerformed (java.awt.event.ActionEvent evt) {
-                //createTopic (evt);
+                createTopic (evt);
             }
         }  );
 
@@ -54,7 +54,7 @@ public class TopicLister extends JFrame
         viewTopicButton.setText("View Topic");
         viewTopicButton.addActionListener (new java.awt.event.ActionListener () {
             public void actionPerformed (java.awt.event.ActionEvent evt) {
-                //viewTopic (evt);
+                viewTopic (evt);
             }
         }  );
 
@@ -70,7 +70,6 @@ public class TopicLister extends JFrame
         topicList.setVisibleRowCount(12);
 
         JScrollPane listScroller = new JScrollPane(topicList);
-        //listScroller.setPreferredSize(new Dimension(250, 80));
         jPanel2.add(listScroller, BorderLayout.CENTER);
         jPanel2.revalidate();
         jPanel2.repaint();
@@ -86,10 +85,17 @@ public class TopicLister extends JFrame
 
     private void createTopic(java.awt.event.ActionEvent evt)
     {
+        this.topicListerController.createTopic();
     }
 
     private void viewTopic(java.awt.event.ActionEvent evt)
     {
+        String selectedTopic = topicList.getSelectedValue();
+
+        if (selectedTopic == null)
+            return;
+
+        topicListerController.viewTopic(selectedTopic);
     }
 
     private String[] getTopicList()
@@ -108,9 +114,6 @@ public class TopicLister extends JFrame
         for(String topic : this.getTopicList()) {
             listModel.addElement(new String(topic + "\n"));
         }
-        //topicList.update(topicList.getGraphics());
-        //topicList.updateUI();
-        //topicList.setVisibleRowCount(listModel.size());
         topicList.setModel(listModel);
     }
 

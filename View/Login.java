@@ -4,7 +4,9 @@ import javax.swing.*;
 
 public class Login extends JFrame
 {
-    private JTextField passIn, userIn;
+    //JSwing components
+    private JTextField userIn;
+    private JPasswordField passIn;
     private Controller.Login loginController;
 
     public Login()
@@ -42,7 +44,7 @@ public class Login extends JFrame
         passLabel.setText ("Password ");
         jPanel2.add (passLabel);
 
-        passIn = new JTextField (12);
+        passIn = new JPasswordField (12);
         passIn.setText ("");
         jPanel2.add (passIn);
 
@@ -79,7 +81,7 @@ public class Login extends JFrame
     private void login(java.awt.event.ActionEvent evt)
     {
         String username = userIn.getText();
-        String password = passIn.getText();
+        String password = new String(passIn.getPassword());
 
         if (!this.loginController.validUser(username, password)){
             return;

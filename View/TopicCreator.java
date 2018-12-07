@@ -69,6 +69,9 @@ public class TopicCreator extends JFrame
     {
         String topicTitle = titleIn.getText();
         this.topicCreatorController.createTopic(topicTitle);
+
+        JOptionPane.showMessageDialog(null, "Topic Created");
+        instance.setVisible(false);
     }
 
     public static void main(String[] args) {

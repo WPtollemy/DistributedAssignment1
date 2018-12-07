@@ -1,16 +1,19 @@
 package View;
 import java.awt.*;
 import javax.swing.*;
-import res.WPTopic;
 
 public class Register extends JFrame
 {
+    //Instance
     private static Register instance = new Register();
 
-    private Controller.Register registerController;
-
-    private JTextField userIn, passIn;
+    //JSwing components
+    private JTextField userIn;
+    private JPasswordField passIn;
     private JLabel errorLabel;
+
+    //Other vars
+    private Controller.Register registerController;
 
     public static Register getInstance()
     {
@@ -57,7 +60,7 @@ public class Register extends JFrame
         passLabel.setText ("Password ");
         jPanel2.add (passLabel);
 
-        passIn = new JTextField (12);
+        passIn = new JPasswordField (12);
         passIn.setText ("");
         jPanel2.add (passIn);
 
@@ -83,7 +86,7 @@ public class Register extends JFrame
     private void register(java.awt.event.ActionEvent evt)
     {
         String username = userIn.getText();
-        String password = passIn.getText();
+        String password = new String(passIn.getPassword());
 
         if (!registerController.validUser(username, password)) {
             // TODO Get actual error messages
@@ -95,7 +98,7 @@ public class Register extends JFrame
 
         registerController.registerUser(username, password);
         JOptionPane.showMessageDialog(null, "Account Created");
-        this.instance.setVisible(false);
+        instance.setVisible(false);
     }
 
     public static void main(String[] args) {

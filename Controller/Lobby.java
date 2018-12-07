@@ -1,6 +1,6 @@
 package Controller;
-import View.TopicCreator;
 import View.TopicViewer;
+import View.TopicLister;
 
 public class Lobby 
 {
@@ -8,15 +8,17 @@ public class Lobby
     {
     }
 
-    public void createTopic()
+    public void showTopicList()
     {
-        TopicCreator topicCreator = TopicCreator.getInstance();
-        topicCreator.setVisible(true);
+        TopicLister topicLister = TopicLister.getInstance();
+        topicLister.setVisible(true);
     }
 
     public void findTopic()
     {
+        /*
         TopicViewer topicViewer = TopicViewer.getInstance();
         topicViewer.setVisible(true);
+        /**/
     }
 }

@@ -5,7 +5,7 @@ import javax.swing.*;
 public class Lobby extends JFrame 
 {
     private Controller.Lobby lobbyController;
-    private	JButton createTopicButton = new JButton();
+    private	JButton listTopicButton = new JButton();
     private	JButton searchTopicButton = new JButton();
 
     public Lobby()
@@ -35,14 +35,14 @@ public class Lobby extends JFrame
         JPanel jPanel2 = new JPanel();
         jPanel2.setLayout(new BoxLayout(jPanel2, BoxLayout.Y_AXIS));
 
-        createTopicButton.setText("Create Topic");
-        createTopicButton.addActionListener (new java.awt.event.ActionListener () {
+        listTopicButton.setText("List Topics");
+        listTopicButton.addActionListener (new java.awt.event.ActionListener () {
             public void actionPerformed (java.awt.event.ActionEvent evt) {
-                createTopic(evt); 
+                listTopics(evt); 
             }
         }  );
 
-        jPanel2.add(createTopicButton);
+        jPanel2.add(listTopicButton);
 
         searchTopicButton.setText("Find Topic");
         searchTopicButton.addActionListener (new java.awt.event.ActionListener () {
@@ -57,9 +57,9 @@ public class Lobby extends JFrame
         cp.add (jPanel2, "Center");
     }
 
-    private void createTopic(java.awt.event.ActionEvent evt)
+    private void listTopics(java.awt.event.ActionEvent evt)
     {
-        this.lobbyController.createTopic();
+        this.lobbyController.showTopicList();
     }
 
     private void searchTopic(java.awt.event.ActionEvent evt)
