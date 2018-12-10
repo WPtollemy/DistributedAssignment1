@@ -20,7 +20,7 @@ public class TopicLister
 
     public void viewTopic(String selectedTopic)
     {
-        TopicViewer topicViewer = TopicViewer.getInstance(selectedTopic);
+        TopicViewer topicViewer = new TopicViewer(selectedTopic);
         topicViewer.setVisible(true);
     }
 

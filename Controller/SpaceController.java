@@ -165,6 +165,34 @@ public class SpaceController
 
     public ArrayList<WPMessage> getMessageList(String topicTitle)
     {
+        ArrayList<WPMessage> messagesTpl = new ArrayList<WPMessage>();
+        WPMessage messageTpl             = new WPMessage();
+        messageTpl.topic = topicTitle;
+        messagesTpl.add(messageTpl);
+
+        MatchSet set = null;
+        Entry entry = null;
+        
+        ArrayList<WPMessage> messages = new ArrayList<WPMessage>();
+
+        try {
+            set = space.contents(messagesTpl, null, 500, 1000);
+            while (null != set) {
+                entry = set.next();
+                if (null == entry) {
+                    break;
+                } else {
+                    messages.add((WPMessage)entry);
+                }
+            } 
+        } catch (Exception e) {
+        }
+
+        return messages;
+    }
+
+    public void subscribeUserToTopic(WPUser user, String topic)
+    {
         Transaction.Created trc = null;
         try {
             trc = TransactionFactory.create(mgr, 3000);
@@ -174,28 +202,25 @@ public class SpaceController
 
         Transaction txn = trc.transaction; 
 
-        WPMessage messageTpl = new WPMessage();
-        messageTpl.topic = topicTitle;
-        ArrayList<WPMessage> messagesTpl = new ArrayList<WPMessage>();
-        messagesTpl.add(messageTpl);
-
-        ArrayList<WPMessage> messageList = new ArrayList<WPMessage>();
+        WPUser existingUser = null;
         try {
-            messageList.addAll(space.take(messagesTpl, txn, TWO_SECONDS, 50));
-        } catch (Exception e) {
+            existingUser = (WPUser)space.take(user, txn, TWO_SECONDS);
+        }  catch ( Exception e) {
+            e.printStackTrace();
+        }
+
+        existingUser.subscribe(topic);
+
+        try {
+            space.write( user, txn, THREE_MINUTES);
+        }  catch ( Exception e) {
             e.printStackTrace();
         }
 
         try {
-            for(WPMessage message : messageList) {
-                space.write(message, txn, THREE_MINUTES);
-            }
-
             txn.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return messageList;
     }
 }

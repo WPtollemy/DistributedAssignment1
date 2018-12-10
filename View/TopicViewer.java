@@ -2,34 +2,44 @@ package View;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import res.WPTopic;
+import net.jini.core.event.*;
+import net.jini.core.lease.Lease;
+import net.jini.export.Exporter;
+import net.jini.jeri.BasicILFactory;
+import net.jini.jeri.BasicJeriExporter;
+import net.jini.jeri.tcp.TcpServerEndpoint;
+import net.jini.space.JavaSpace;
+import res.WPMessage;
 
-public class TopicViewer extends JFrame
+public class TopicViewer extends JFrame implements RemoteEventListener
 {
-    //Instance
-    private static TopicViewer instance = new TopicViewer();
-
     //JSwing components
-    private JComboBox<String> topicList;
 	private JTextField newComment;
     private JList<String> messageList;
     private JCheckBox privateBox;
 
-    //Other vars
-    private static String topicName;
+    //Space vars
     private Controller.TopicViewer topicViewerController;
+    private JavaSpace space;
+    private RemoteEventListener theStub;
 
-    public static TopicViewer getInstance(String topicTitle)
+    //Other vars
+    private String topicName;
+    private static int FIFTEEN_MINUTES = 15000 * 60;
+
+    public TopicViewer(String topicTitle)
     {
         topicName = topicTitle;
-        instance.setTitle (topicName.trim());
-
-        return instance;
-    }
-
-    private TopicViewer()
-    {
+        this.setTitle (topicName.trim());
         topicViewerController = new Controller.TopicViewer();
+
+        // find the space
+        space = Controller.SpaceUtils.getSpace();
+        if (space == null){
+            System.err.println("Failed to find the javaspace");
+            System.exit(1);
+        }
+        setupNotification();
 
         initComponents ();
         pack ();
@@ -84,31 +94,56 @@ public class TopicViewer extends JFrame
         privateBox = new JCheckBox("Private");
         jPanel3.add(privateBox);
 
+        JButton subscribeButton = new JButton();
+        subscribeButton.setText("Subscribe");
+        subscribeButton.addActionListener (new java.awt.event.ActionListener () {
+            public void actionPerformed (java.awt.event.ActionEvent evt) {
+                subscribe (evt);
+            }
+        }  );
+
+        jPanel3.add(subscribeButton);
+
         cp.add (jPanel1, "North");
         cp.add (jPanel2, "Center");
         cp.add (jPanel3, "South");
     }
 
-    private void showTopic(java.awt.event.ActionEvent evt)
+    private void addMessage(java.awt.event.ActionEvent evt)
     {
-        topicName = (String)topicList.getSelectedItem();
-        WPTopic topic = topicViewerController.findTopic(topicName);
-
-        //Handle errors
-        if (null == topic) {
-            System.out.println("null topic found: " + topicName);
-            return;
-        }
-
-        setTitle ("Topic: " + topicName);
-
+        topicViewerController.addMessage(topicName, newComment.getText(), privateBox.isSelected());
         updateMessageList();
     }
 
-    private void addMessage(java.awt.event.ActionEvent evt)
+    private void subscribe(java.awt.event.ActionEvent evt)
     {
-        topicName = (String)topicList.getSelectedItem();
-        topicViewerController.addMessage(topicName, newComment.getText(), privateBox.isSelected());
+        //Add subscribe functionality
+    }
+
+    private void setupNotification()
+    {
+        // create the exporter
+        Exporter myDefaultExporter =
+            new BasicJeriExporter(TcpServerEndpoint.getInstance(0),
+                    new BasicILFactory(), false, true);
+
+        try {
+            // register this as a remote object
+            // and get a reference to the 'stub'
+            theStub = (RemoteEventListener) myDefaultExporter.export(this);
+
+            // add the listener
+            WPMessage template = new WPMessage();
+            template.topic     = topicName;
+            space.notify(template, null, this.theStub, FIFTEEN_MINUTES, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void notify(RemoteEvent ev)
+    {
         updateMessageList();
     }
 
@@ -144,6 +179,6 @@ public class TopicViewer extends JFrame
     }
 
     public static void main(String[] args) {
-        new TopicViewer();
+        new TopicViewer("TEST");
     }
 }

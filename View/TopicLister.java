@@ -1,9 +1,13 @@
 package View;
-import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.Timer;
 import net.jini.core.event.*;
 import net.jini.core.lease.Lease;
 import net.jini.export.Exporter;
@@ -12,13 +16,13 @@ import net.jini.jeri.BasicJeriExporter;
 import net.jini.jeri.tcp.TcpServerEndpoint;
 import net.jini.space.JavaSpace;
 import res.WPTopic;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class TopicLister extends JFrame implements RemoteEventListener
 {
     //JSwing components
     private JList<String> topicList;
+    private JCheckBox userTopicsBox;
+    private JButton deleteTopicButton;
 
     //Other vars
     private Controller.TopicLister topicListerController;
@@ -93,6 +97,26 @@ public class TopicLister extends JFrame implements RemoteEventListener
 		JPanel jPanel3 = new JPanel();
 		jPanel3.setLayout (new FlowLayout ());
 
+        deleteTopicButton = new JButton();
+        deleteTopicButton.setText("Delete Topic");
+        deleteTopicButton.addActionListener (new java.awt.event.ActionListener () {
+            public void actionPerformed (java.awt.event.ActionEvent evt) {
+                deleteTopic (evt);
+            }
+        }  );
+        deleteTopicButton.setEnabled(false);
+        jPanel3.add(deleteTopicButton);
+
+        userTopicsBox = new JCheckBox("My Created Topics");
+        userTopicsBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent evt) {
+                onSubscribedChange(evt);
+            }
+        });
+        jPanel3.add(userTopicsBox);
+
+        cp.add (jPanel1, "North");
+
         cp.add (jPanel1, "North");
         cp.add (jPanel2, "Center");
         cp.add (jPanel3, "South");
@@ -101,6 +125,21 @@ public class TopicLister extends JFrame implements RemoteEventListener
     private void createTopic(java.awt.event.ActionEvent evt)
     {
         this.topicListerController.createTopic();
+    }
+
+    private void deleteTopic(java.awt.event.ActionEvent evt)
+    {
+        //TODO Delete topic
+    }
+
+    private void onSubscribedChange(ItemEvent evt)
+    {
+        if (userTopicsBox.isSelected()){
+            deleteTopicButton.setEnabled(true);
+            return;
+        }
+
+        deleteTopicButton.setEnabled(false);
     }
 
     private void viewTopic(java.awt.event.ActionEvent evt)
@@ -138,20 +177,7 @@ public class TopicLister extends JFrame implements RemoteEventListener
     // of an object of interest
     public void notify(RemoteEvent ev)
     {
-            updateTopicList();
-            JFrame f = new JFrame();
-            f.setMinimumSize(new Dimension(100,100));
-            final JDialog dialog = new JDialog(f, "Test", true);
-            Timer timer = new Timer(2000, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    dialog.setVisible(false);
-                    dialog.dispose();
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
-
-            dialog.setVisible(true); // if modal, application will pause here
+        updateTopicList();
     }
 
     private void updateTopicList()
