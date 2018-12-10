@@ -10,7 +10,7 @@ public class Lobby
 
     public void showTopicList()
     {
-        TopicLister topicLister = TopicLister.getInstance();
+        TopicLister topicLister = new TopicLister();
         topicLister.setVisible(true);
     }
 

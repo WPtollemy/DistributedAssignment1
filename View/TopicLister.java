@@ -1,32 +1,47 @@
 package View;
-import java.util.ArrayList;
+import javax.swing.Timer;
 import java.awt.*;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import javax.swing.*;
+import net.jini.core.event.*;
+import net.jini.core.lease.Lease;
+import net.jini.export.Exporter;
+import net.jini.jeri.BasicILFactory;
+import net.jini.jeri.BasicJeriExporter;
+import net.jini.jeri.tcp.TcpServerEndpoint;
+import net.jini.space.JavaSpace;
+import res.WPTopic;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class TopicLister extends JFrame
+public class TopicLister extends JFrame implements RemoteEventListener
 {
-    //Instance
-    private static TopicLister instance = new TopicLister();
-
     //JSwing components
     private JList<String> topicList;
 
     //Other vars
     private Controller.TopicLister topicListerController;
+    private JavaSpace space;
+    private RemoteEventListener theStub;
+    private static int FIFTEEN_MINUTES = 15000 * 60;
 
-    public static TopicLister getInstance()
-    {
-        return instance;
-    }
-
-    private TopicLister()
+    public TopicLister()
     {
         topicListerController = new Controller.TopicLister();
+        
+        // find the space
+        space = Controller.SpaceUtils.getSpace();
+        if (space == null){
+            System.err.println("Failed to find the javaspace");
+            System.exit(1);
+        }
+        setupNotification();
 
         initComponents();
         pack();
-        updateTopicList();
         setVisible(true);
+        updateTopicList();
     }
 
     private void initComponents()
@@ -98,13 +113,45 @@ public class TopicLister extends JFrame
         topicListerController.viewTopic(selectedTopic);
     }
 
-    private String[] getTopicList()
+    private void setupNotification()
     {
-        ArrayList<String> listTopics = topicListerController.getTopicList();
+        // create the exporter
+        Exporter myDefaultExporter =
+            new BasicJeriExporter(TcpServerEndpoint.getInstance(0),
+                    new BasicILFactory(), false, true);
 
-        String[] topics = new String[listTopics.size()];
-        topics = listTopics.toArray(topics);
-        return topics;
+        try {
+            // register this as a remote object
+            // and get a reference to the 'stub'
+            theStub = (RemoteEventListener) myDefaultExporter.export(this);
+
+            // add the listener
+            WPTopic template = new WPTopic();
+            space.notify(template, null, this.theStub, FIFTEEN_MINUTES, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // this is the method called when we are notified
+    // of an object of interest
+    public void notify(RemoteEvent ev)
+    {
+            updateTopicList();
+            JFrame f = new JFrame();
+            f.setMinimumSize(new Dimension(100,100));
+            final JDialog dialog = new JDialog(f, "Test", true);
+            Timer timer = new Timer(2000, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+
+            dialog.setVisible(true); // if modal, application will pause here
     }
 
     private void updateTopicList()
@@ -115,6 +162,15 @@ public class TopicLister extends JFrame
             listModel.addElement(new String(topic + "\n"));
         }
         topicList.setModel(listModel);
+    }
+
+    private String[] getTopicList()
+    {
+        ArrayList<String> listTopics = topicListerController.getTopicList();
+
+        String[] topics = new String[listTopics.size()];
+        topics = listTopics.toArray(topics);
+        return topics;
     }
 
     public static void main(String[] args) {

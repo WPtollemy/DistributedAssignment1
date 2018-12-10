@@ -5,6 +5,7 @@ import net.jini.core.transaction.*;
 import net.jini.core.transaction.server.*;
 import net.jini.space.*;
 import res.*;
+import net.jini.core.entry.Entry;
 
 public class SpaceController
 {
@@ -98,39 +99,28 @@ public class SpaceController
 
     public ArrayList<String> getTopicList()
     {
-        Transaction.Created trc = null;
-        try {
-            trc = TransactionFactory.create(mgr, 3000);
-        } catch (Exception e) {
-            System.out.println("Could not create transaction " + e);;
-        }
-
-        Transaction txn = trc.transaction; 
-
-        WPTopic topicTpl = new WPTopic();
         ArrayList<WPTopic> topicsTpl = new ArrayList<WPTopic>();
+        WPTopic topicTpl             = new WPTopic();
         topicsTpl.add(topicTpl);
 
-        ArrayList<WPTopic> topicList = new ArrayList<WPTopic>();
-        try {
-            topicList.addAll(space.take(topicsTpl, txn, TWO_SECONDS, 50));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MatchSet set = null;
+        Entry entry = null;
 
         ArrayList<String> topicTitles = new ArrayList<String>();
-        for (WPTopic topic : topicList) {
-            topicTitles.add(topic.title);
-        }
+        WPTopic result;
 
         try {
-            for(WPTopic topic : topicList) {
-                space.write(topic, txn, THREE_MINUTES);
-            }
-
-            txn.commit();
+            set = space.contents(topicsTpl, null, 500, 1000);
+            while (null != set) {
+                entry = set.next();
+                if (null == entry) {
+                    break;
+                } else {
+                    result = (WPTopic)entry;
+                    topicTitles.add(result.title);
+                }
+            } 
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return topicTitles;
