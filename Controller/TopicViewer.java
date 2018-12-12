@@ -1,4 +1,5 @@
 package Controller;
+import java.rmi.MarshalledObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,7 +7,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.Timer;
 import net.jini.core.event.*;
-import net.jini.core.lease.Lease;
 import net.jini.export.Exporter;
 import net.jini.jeri.BasicILFactory;
 import net.jini.jeri.BasicJeriExporter;
@@ -15,7 +15,7 @@ import net.jini.space.JavaSpace;
 import res.WPMessage;
 import res.WPTopic;
 
-public class TopicViewer implements RemoteEventListener
+public class TopicViewer
 {
     //Space vars
     private JavaSpace space;
@@ -28,6 +28,7 @@ public class TopicViewer implements RemoteEventListener
     public TopicViewer()
     {
         spaceController = new SpaceController();
+
         // find the space
         space = Controller.SpaceUtils.getSpace();
         if (space == null){
@@ -38,49 +39,43 @@ public class TopicViewer implements RemoteEventListener
 
     public WPTopic findTopic(String topicTitle)
     {
-        WPTopic testing = new WPTopic();
-        testing.title   = topicTitle;
+        WPTopic template = new WPTopic();
+        template.title   = topicTitle;
 
-        WPTopic topic = spaceController.readTopic(testing);
+        WPTopic topic = spaceController.readTopic(template);
 
         return topic;
     }
 
-    public String findTopicMessage(WPTopic topic)
+    public String findTopicOwner(String topicTitle)
     {
-        WPMessage message = new WPMessage();
-        message.topic     = topic.title;
-
-        WPMessage newMessage = spaceController.getMessage(message);
-
-        if (null == newMessage)
-            return "";
-
-        return newMessage.messageOwner + ": " + newMessage.message; 
-    }
-
-    public ArrayList<String> getTopicList()
-    {
-        return spaceController.getTopicList();
+        WPTopic topic = findTopic(topicTitle.trim());
+        return topic.topicOwner;
     }
 
     public ArrayList<String> getMessageList(String topicTitle)
     {
-        WPTopic selectedTopic = this.findTopic(topicTitle);
+        WPTopic selectedTopic = findTopic(topicTitle.trim());
         ArrayList<WPMessage> messageList = spaceController.getMessageList(topicTitle);
-
         ArrayList<String> messageTitles = new ArrayList<String>();
-        for (WPMessage message : messageList) {
-            //Ensure the logged in user doesn't see all messages
-            if (message.isPrivate && 
-                    (!message.messageOwner.equals(Main.getLoggedUser().name) &&
-                    !selectedTopic.topicOwner.equals(Main.getLoggedUser().name))
-               ){
-                continue;
-               }
 
-            messageTitles.add(message.messageOwner + ": " + message.message);
-        }
+        try {
+            for (WPMessage message : messageList) {
+                //Ensure the logged in user doesn't see all messages
+                boolean messageOwnerIsLoggedUser = message.messageOwner.equals(Main.getLoggedUser().name);
+                boolean topicOwnerIsLoggedUser   = selectedTopic.topicOwner.equals(Main.getLoggedUser().name);
+                if (message.isPrivate && 
+                        !messageOwnerIsLoggedUser &&
+                        !topicOwnerIsLoggedUser
+                   ){
+                    continue;
+                   }
+
+                messageTitles.add(message.messageOwner + ": " + message.message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
 
         return messageTitles;
     }
@@ -98,48 +93,28 @@ public class TopicViewer implements RemoteEventListener
 
     public void subscribeToTopic(String topic)
     {
-        spaceController.subscribeUserToTopic(Main.getLoggedUser(), topic);
-        createNotification(topic);
-    }
-
-    public void createNotification(String topic)
-    {
+        //TODO subscribe user to topic
+        
         // create the exporter
         Exporter myDefaultExporter =
             new BasicJeriExporter(TcpServerEndpoint.getInstance(0),
                     new BasicILFactory(), false, true);
 
+        NotificationListener listener = new NotificationListener();
+
         try {
             // register this as a remote object
             // and get a reference to the 'stub'
-            theStub = (RemoteEventListener) myDefaultExporter.export(this);
+            theStub = (RemoteEventListener) myDefaultExporter.export(listener);
 
             // add the listener
             WPMessage template = new WPMessage();
-            template.topic = topic;
-            space.notify(template, null, this.theStub, FIFTEEN_MINUTES, null);
+            template.topic     = topic;
+            template.isPrivate = false;
+            space.notify(template, null, this.theStub, FIFTEEN_MINUTES, new MarshalledObject(topic));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    // this is the method called when we are notified
-    // of an object of interest
-    public void notify(RemoteEvent ev)
-    {
-        //TODO create and use own jdialog frame
-        JFrame f = new JFrame();
-        final JDialog dialog = new JDialog(f, "Test", true);
-        dialog.setMinimumSize(new Dimension(100,100));
-        Timer timer = new Timer(2000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dialog.setVisible(false);
-                dialog.dispose();
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
-
-        dialog.setVisible(true); // if modal, application will pause here
     }
 }

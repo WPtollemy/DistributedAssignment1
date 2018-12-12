@@ -2,6 +2,7 @@ package Controller;
 import java.util.ArrayList;
 import View.TopicCreator;
 import View.TopicViewer;
+import res.WPTopic;
 
 public class TopicLister
 {
@@ -21,11 +22,26 @@ public class TopicLister
     public void viewTopic(String selectedTopic)
     {
         TopicViewer topicViewer = new TopicViewer(selectedTopic);
-        topicViewer.setVisible(true);
     }
 
-    public ArrayList<String> getTopicList()
+    public ArrayList<String> getTopicList(boolean userTopicsOnly)
     {
-        return spaceController.getTopicList();
+        ArrayList<String> topicsTitles = new ArrayList<String>();
+
+        for (WPTopic topic : spaceController.getTopicList()) {
+            if (!userTopicsOnly ||
+                    topic.topicOwner.equals(Main.getLoggedUser().name))
+                topicsTitles.add(topic.title);
+        }
+
+        return topicsTitles;
+    }
+
+    public void deleteTopic(String topicTitle)
+    {
+        WPTopic template = new WPTopic();
+        template.title = topicTitle;
+
+        spaceController.deleteTopic(template);
     }
 }

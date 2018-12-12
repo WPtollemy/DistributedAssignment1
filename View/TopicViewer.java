@@ -29,9 +29,10 @@ public class TopicViewer extends JFrame implements RemoteEventListener
 
     public TopicViewer(String topicTitle)
     {
-        topicName = topicTitle;
-        this.setTitle (topicName.trim());
         topicViewerController = new Controller.TopicViewer();
+
+        topicName = topicTitle;
+        this.setTitle (topicViewerController.findTopicOwner(topicName) + " - " + topicName.trim());
 
         // find the space
         space = Controller.SpaceUtils.getSpace();
@@ -112,12 +113,12 @@ public class TopicViewer extends JFrame implements RemoteEventListener
     private void addMessage(java.awt.event.ActionEvent evt)
     {
         topicViewerController.addMessage(topicName, newComment.getText(), privateBox.isSelected());
-        updateMessageList();
     }
 
     private void subscribe(java.awt.event.ActionEvent evt)
     {
         //Add subscribe functionality
+        topicViewerController.subscribeToTopic(topicName);
     }
 
     private void setupNotification()
@@ -145,15 +146,6 @@ public class TopicViewer extends JFrame implements RemoteEventListener
     public void notify(RemoteEvent ev)
     {
         updateMessageList();
-    }
-
-    private String[] getTopicList()
-    {
-        ArrayList<String> listTopics = topicViewerController.getTopicList();
-
-        String[] topics = new String[listTopics.size()];
-        topics = listTopics.toArray(topics);
-        return topics;
     }
 
     private String[] getMessageList()

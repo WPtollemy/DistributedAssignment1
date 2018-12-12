@@ -110,7 +110,7 @@ public class TopicLister extends JFrame implements RemoteEventListener
         userTopicsBox = new JCheckBox("My Created Topics");
         userTopicsBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent evt) {
-                onSubscribedChange(evt);
+                onCreatedChange(evt);
             }
         });
         jPanel3.add(userTopicsBox);
@@ -129,11 +129,18 @@ public class TopicLister extends JFrame implements RemoteEventListener
 
     private void deleteTopic(java.awt.event.ActionEvent evt)
     {
-        //TODO Delete topic
+        String selectedTopic = topicList.getSelectedValue();
+
+        if (null != selectedTopic) {
+            selectedTopic = selectedTopic.trim();
+            this.topicListerController.deleteTopic(selectedTopic);
+        }
+        updateTopicList();
     }
 
-    private void onSubscribedChange(ItemEvent evt)
+    private void onCreatedChange(ItemEvent evt)
     {
+        updateTopicList();
         if (userTopicsBox.isSelected()){
             deleteTopicButton.setEnabled(true);
             return;
@@ -184,6 +191,7 @@ public class TopicLister extends JFrame implements RemoteEventListener
     {
         //Clear topic list then update
         DefaultListModel<String> listModel = new DefaultListModel<String>();
+
         for(String topic : this.getTopicList()) {
             listModel.addElement(new String(topic + "\n"));
         }
@@ -192,7 +200,9 @@ public class TopicLister extends JFrame implements RemoteEventListener
 
     private String[] getTopicList()
     {
-        ArrayList<String> listTopics = topicListerController.getTopicList();
+        boolean userTopicsOnly = userTopicsBox.isSelected();
+
+        ArrayList<String> listTopics = topicListerController.getTopicList(userTopicsOnly);
 
         String[] topics = new String[listTopics.size()];
         topics = listTopics.toArray(topics);
