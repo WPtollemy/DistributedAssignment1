@@ -68,9 +68,14 @@ public class TopicCreator extends JFrame
     private void createTopic(java.awt.event.ActionEvent evt)
     {
         String topicTitle = titleIn.getText();
-        this.topicCreatorController.createTopic(topicTitle);
+        boolean createdTopic = this.topicCreatorController.createTopic(topicTitle);
+        String infoText = "Topic Created";
 
-        JOptionPane.showMessageDialog(null, "Topic Created");
+        if (!createdTopic) {
+            infoText = "Topic already exists!";
+        }
+
+        JOptionPane.showMessageDialog(null, infoText);
         instance.setVisible(false);
     }
 

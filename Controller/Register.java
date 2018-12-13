@@ -1,5 +1,4 @@
 package Controller;
-import View.Lobby;
 import res.WPUser;
 
 public class Register 
@@ -27,11 +26,5 @@ public class Register
             spaceController.writeUser(user);
 
         return;
-    }
-
-    public void loginUser()
-    {
-        Lobby lobby = new Lobby(); 
-        lobby.setVisible(true);
     }
 }

@@ -1,13 +1,11 @@
 package Controller;
 import View.Login;
 import javax.swing.*;
-import res.Lookup.Panels;
 import res.WPUser;
 
 public class Main
 {
     static WPUser loggedUser;
-    static JFrame mainFrame;
 
     public static void main(String[] args) {
         new Login().setVisible(true);
@@ -21,31 +19,5 @@ public class Main
     public static WPUser getLoggedUser()
     {
         return Main.loggedUser;
-    }
-
-    public static void changeScreen(int screenId)
-    {
-        /**/
-        switch (screenId) {
-            case Panels.LOGIN_ID:
-                //Swap in login panel
-                break;
-            case Panels.REGISTER_ID:
-                //Swap in login panel
-                break;
-            case Panels.LOBBY_ID:
-                //Swap in login panel
-                break;
-            case Panels.TOPIC_CREATE_ID:
-                //Swap in login panel
-                break;
-            case Panels.TOPIC_VIEW_ID:
-                //Swap in login panel
-                break;
-            case Panels.TOPIC_OWNED_ID:
-                //Swap in login panel
-                break;
-        }
-        /**/
     }
 }

@@ -81,7 +81,7 @@ public class SpaceController
             e.printStackTrace();
         }
 
-        return user = new WPUser();
+        return null;
     }
 
     public WPTopic readTopic(WPTopic topic)
@@ -94,7 +94,7 @@ public class SpaceController
             e.printStackTrace();
         }
 
-        return topic = new WPTopic();
+        return null;
     }
 
     public void deleteTopic(WPTopic topic)
@@ -109,22 +109,30 @@ public class SpaceController
         Transaction txn = trc.transaction; 
 
         try {
-            space.take( topic, txn, READ_TIME);
-
-            WPMessage message = new WPMessage();
-            message.topic = topic.title;
             WPMessage foundMessage = new WPMessage();
 
             do {
-                foundMessage = (WPMessage)space.take( message, txn, READ_TIME);
+                WPMessage message      = new WPMessage();
+                message.topic          = topic.title;
+                foundMessage = (WPMessage)space.take( message, null, READ_TIME);
             } while (null != foundMessage);
 
+            space.take( topic, txn, READ_TIME);
         }  catch ( Exception e) {
             e.printStackTrace();
         }
 
         try {
             txn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            WPMessage message = new WPMessage();
+            message.topic     = topic.title;
+            message.isPrivate = false;
+            space.write( message, null, 1000); //Write a temporary message to trigger a notification
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,7 +199,7 @@ public class SpaceController
             e.printStackTrace();
         }
 
-        return message = new WPMessage();
+        return null;
     }
 
     public ArrayList<WPMessage> getMessageList(String topicTitle)

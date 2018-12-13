@@ -6,24 +6,40 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.Timer;
 import net.jini.core.event.*;
+import res.*;
 
 public class NotificationListener implements RemoteEventListener
 {
+    private SpaceController spaceController;
+
     public NotificationListener()
     {
+        spaceController = new SpaceController();
     }
 
     public void notify(RemoteEvent ev)
     {
-        //Create notification
-        System.out.println("Notif works");
-
         new Thread() {
             public void run() {
 
+                String notificationText = "";
+
+                try {
+                    notificationText = "New message for " + ev.getRegistrationObject().get();
+                    WPTopic topic = new WPTopic();
+                    topic.title = (String)ev.getRegistrationObject().get();
+
+                    if (null == spaceController.readTopic(topic)) {
+                        notificationText = "Topic: " + ev.getRegistrationObject().get() + " has been deleted";
+                    }
+                } catch (Exception e) {
+                    //Do nothing
+                    e.printStackTrace();
+                }
+
                 try{
                     final JOptionPane optionPane = new JOptionPane(
-                            "New Notification for " + ev.getRegistrationObject().get(),
+                            notificationText,
                             JOptionPane.INFORMATION_MESSAGE,
                             JOptionPane.DEFAULT_OPTION,
                             null,

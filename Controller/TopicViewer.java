@@ -56,7 +56,7 @@ public class TopicViewer
     public ArrayList<String> getMessageList(String topicTitle)
     {
         WPTopic selectedTopic = findTopic(topicTitle.trim());
-        ArrayList<WPMessage> messageList = spaceController.getMessageList(topicTitle);
+        ArrayList<WPMessage> messageList = spaceController.getMessageList(topicTitle.trim());
         ArrayList<String> messageTitles = new ArrayList<String>();
 
         try {
@@ -94,7 +94,7 @@ public class TopicViewer
     public void subscribeToTopic(String topic)
     {
         //TODO subscribe user to topic
-        
+        // Creates the notification for user        
         // create the exporter
         Exporter myDefaultExporter =
             new BasicJeriExporter(TcpServerEndpoint.getInstance(0),

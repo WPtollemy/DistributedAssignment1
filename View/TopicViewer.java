@@ -31,7 +31,7 @@ public class TopicViewer extends JFrame implements RemoteEventListener
     {
         topicViewerController = new Controller.TopicViewer();
 
-        topicName = topicTitle;
+        topicName = topicTitle.trim();
         this.setTitle (topicViewerController.findTopicOwner(topicName) + " - " + topicName.trim());
 
         // find the space
@@ -45,6 +45,7 @@ public class TopicViewer extends JFrame implements RemoteEventListener
         initComponents ();
         pack ();
         setVisible(true);
+        updateMessageList();
     }
 
     private void initComponents ()
@@ -112,6 +113,9 @@ public class TopicViewer extends JFrame implements RemoteEventListener
 
     private void addMessage(java.awt.event.ActionEvent evt)
     {
+        if (newComment.getText().equals(""))
+            return;
+
         topicViewerController.addMessage(topicName, newComment.getText(), privateBox.isSelected());
     }
 
