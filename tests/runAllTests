@@ -1,0 +1,4 @@
+echo "Testing res/* folder"
+java org.junit.runner.JUnitCore tests.res.WPMessageTest tests.res.WPUserTest tests.res.WPTopicTest
+
+java -Djava.security.policy=policy.all -Djava.rmi.server.useCodebaseOnly=false org.junit.runner.JUnitCore tests.Controller.LoginControllerTest tests.Controller.RegisterControllerTest tests.Controller.TopicCreatorControllerTest tests.Controller.TopicListerControllerTest

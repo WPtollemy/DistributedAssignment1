@@ -8,3 +8,9 @@ javac *.java
 
 cd ../View/
 javac *.java
+
+cd ../tests/Controller/
+javac *.java
+
+cd ../res/
+javac *.java

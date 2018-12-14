@@ -11,15 +11,16 @@ public class TopicCreator
 
     public boolean createTopic(String topicTitle)
     {
-        WPTopic testing = new WPTopic(topicTitle, Main.getLoggedUser().name);
+        WPTopic topicToAdd = new WPTopic(topicTitle, Main.getLoggedUser().name);
+        WPTopic topicToCheck = new WPTopic(topicTitle, null);
 
-        if (null != spaceController.readTopic(testing)) {
+        if (null != spaceController.readTopic(topicToCheck)) {
             //"fail" for already existing topic
             return false;
         }
 
         //presume that topic gets created (should validate)
-        spaceController.writeTopic(testing);
+        spaceController.writeTopic(topicToAdd);
         return true;
     }
 }

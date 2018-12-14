@@ -1,2 +1,2 @@
-CLASSPATH=.:/local/apache-river-3.0.0/lib/jsk-lib.jar:/local/apache-river-3.0.0/lib/jsk-platform.jar:/local/apache-river-3.0.0/lib/outrigger.jar:/local/apache-river-3.0.0/lib/reggie.jar:/local/apache-river-3.0.0/lib-dl/outrigger-dl.jar:/home/user/u1558457/DistributedClientServer/Assignment/DistributedAssignment1/:/usr/share/java/junit4-4.12.jar:/usr/share/java/hamcrest-core-1.3.jar
+CLASSPATH=.:/local/apache-river-3.0.0/lib/jsk-lib.jar:/local/apache-river-3.0.0/lib/jsk-platform.jar:/local/apache-river-3.0.0/lib/outrigger.jar:/local/apache-river-3.0.0/lib/reggie.jar:/local/apache-river-3.0.0/lib-dl/outrigger-dl.jar:/home/user/u1558457/DistributedClientServer/Assignment/DistributedAssignment1/:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core-1.3.jar
 
