@@ -9,14 +9,17 @@ public class Register
     {
     }
 
+    //Validates details entered
     public boolean validUser(String username, String password)
     {
-        //Add password validation etc
+        //Potential to add password validation e.g. min 11 characters etc 
 
+        //Check if the user already exists, invalid if one is
         WPUser user = new WPUser(username, password);
         return !spaceController.doesUserExist(user);    
     }
 
+    //Create user and write to space
     public void registerUser(String username, String password)
     {
         WPUser user = new WPUser(username, password);

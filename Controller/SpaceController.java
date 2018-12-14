@@ -40,6 +40,7 @@ public class SpaceController
 
     public void writeUser(WPUser user)
     {
+        //Start transaction
         Transaction.Created trc = null;
         try {
             trc = TransactionFactory.create(mgr, 3000);
@@ -49,6 +50,7 @@ public class SpaceController
 
         Transaction txn = trc.transaction; 
 
+        //Check user exists before writing into space
         WPUser existingUser = null;
         try {
             existingUser = (WPUser)space.readIfExists(user, txn, READ_TIME);
@@ -99,6 +101,7 @@ public class SpaceController
 
     public void deleteTopic(WPTopic topic)
     {
+        //Start a transaction
         Transaction.Created trc = null;
         try {
             trc = TransactionFactory.create(mgr, 3000);
@@ -111,28 +114,31 @@ public class SpaceController
         try {
             WPMessage foundMessage = new WPMessage();
 
+            //Take all messages for the topic, stop when none left
             do {
                 WPMessage message      = new WPMessage();
                 message.topic          = topic.title;
-                foundMessage = (WPMessage)space.take( message, null, READ_TIME);
+                foundMessage = (WPMessage)space.take( message, txn, READ_TIME);
             } while (null != foundMessage);
 
+            //Take the topic
             space.take( topic, txn, READ_TIME);
         }  catch ( Exception e) {
             e.printStackTrace();
         }
 
+        //Create message that notifier is listening out for
         try {
-            txn.commit();
+            WPMessage message = new WPMessage();
+            message.topic     = topic.title;
+            message.isPrivate = false;
+            space.write( message, txn, 1000); //Write a temporary message to trigger a notification
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            WPMessage message = new WPMessage();
-            message.topic     = topic.title;
-            message.isPrivate = false;
-            space.write( message, null, 1000); //Write a temporary message to trigger a notification
+            txn.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,6 +173,8 @@ public class SpaceController
 
     public boolean doesUserExist(WPUser user)
     {
+        //Find a user in the space
+        //if there is one return true
         try {
             WPUser existingUser = (WPUser)space.readIfExists(user, null, READ_TIME);
 

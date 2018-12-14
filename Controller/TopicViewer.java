@@ -1,8 +1,8 @@
 package Controller;
-import java.rmi.MarshalledObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.MarshalledObject;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -27,9 +27,10 @@ public class TopicViewer
 
     public TopicViewer()
     {
+        //space controller (to handle finding topics etc)
         spaceController = new SpaceController();
 
-        // find the space
+        // find the space (to set up notifications)
         space = Controller.SpaceUtils.getSpace();
         if (space == null){
             System.err.println("Failed to find the javaspace");
@@ -61,13 +62,14 @@ public class TopicViewer
 
         try {
             for (WPMessage message : messageList) {
-                //Ensure the logged in user doesn't see all messages
                 boolean messageOwnerIsLoggedUser = message.messageOwner.equals(Main.getLoggedUser().name);
                 boolean topicOwnerIsLoggedUser   = selectedTopic.topicOwner.equals(Main.getLoggedUser().name);
+                //check if the logged in user is topic owner or message owner
                 if (message.isPrivate && 
                         !messageOwnerIsLoggedUser &&
                         !topicOwnerIsLoggedUser
                    ){
+                    //Skip private messages if user isn't topic owner or message owner 
                     continue;
                    }
 
@@ -93,8 +95,7 @@ public class TopicViewer
 
     public void subscribeToTopic(String topic)
     {
-        //TODO subscribe user to topic
-        // Creates the notification for user        
+        // create notification to subscribe user to topic
         // create the exporter
         Exporter myDefaultExporter =
             new BasicJeriExporter(TcpServerEndpoint.getInstance(0),

@@ -1,10 +1,10 @@
 package Controller;
 import View.Login;
-import javax.swing.*;
 import res.WPUser;
 
 public class Main
 {
+    //To remember which user is logged in
     static WPUser loggedUser;
 
     public static void main(String[] args) {
