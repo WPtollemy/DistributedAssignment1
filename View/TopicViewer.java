@@ -173,8 +173,4 @@ public class TopicViewer extends JFrame implements RemoteEventListener
         messageList.setVisibleRowCount(listModel.size());
         messageList.setModel(listModel);
     }
-
-    public static void main(String[] args) {
-        new TopicViewer("TEST");
-    }
 }

@@ -131,6 +131,7 @@ public class TopicLister extends JFrame implements RemoteEventListener
     {
         String selectedTopic = topicList.getSelectedValue();
 
+        //Check a topic has been selected before trying to delete
         if (null != selectedTopic) {
             selectedTopic = selectedTopic.trim();
             this.topicListerController.deleteTopic(selectedTopic);
@@ -141,6 +142,9 @@ public class TopicLister extends JFrame implements RemoteEventListener
     private void onCreatedChange(ItemEvent evt)
     {
         updateTopicList();
+
+        //Only enable the delete topic button
+        //when users filter to their own topics
         if (userTopicsBox.isSelected()){
             deleteTopicButton.setEnabled(true);
             return;
@@ -153,6 +157,7 @@ public class TopicLister extends JFrame implements RemoteEventListener
     {
         String selectedTopic = topicList.getSelectedValue();
 
+        //Check a topic has been selected before trying to delete
         if (selectedTopic == null)
             return;
 
@@ -207,9 +212,5 @@ public class TopicLister extends JFrame implements RemoteEventListener
         String[] topics = new String[listTopics.size()];
         topics = listTopics.toArray(topics);
         return topics;
-    }
-
-    public static void main(String[] args) {
-        new TopicLister();
     }
 }

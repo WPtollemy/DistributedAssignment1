@@ -4,12 +4,16 @@ import javax.swing.*;
 
 public class TopicCreator extends JFrame
 {
+    //Instance
     private static TopicCreator instance = new TopicCreator();
 
-    private Controller.TopicCreator topicCreatorController;
-
+    //JSwing components
     private JTextField titleIn;
 
+    //Other vars
+    private Controller.TopicCreator topicCreatorController;
+
+    //Only have one topic creator instance at a time
     public static TopicCreator getInstance()
     {
         return instance;
@@ -30,7 +34,7 @@ public class TopicCreator extends JFrame
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());
 
-        //North panel
+        //North panel to take the title
         JPanel jPanel1 = new JPanel();
         jPanel1.setLayout (new FlowLayout ());
 
@@ -71,15 +75,12 @@ public class TopicCreator extends JFrame
         boolean createdTopic = this.topicCreatorController.createTopic(topicTitle);
         String infoText = "Topic Created";
 
+        //Override display text if failed to create topic
         if (!createdTopic) {
             infoText = "Topic already exists!";
         }
 
         JOptionPane.showMessageDialog(null, infoText);
         instance.setVisible(false);
-    }
-
-    public static void main(String[] args) {
-        new TopicCreator().setVisible(true);
     }
 }

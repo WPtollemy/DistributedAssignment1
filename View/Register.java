@@ -15,6 +15,7 @@ public class Register extends JFrame
     //Other vars
     private Controller.Register registerController;
 
+    //Only have one register instance at any time
     public static Register getInstance()
     {
         return instance;
@@ -36,7 +37,7 @@ public class Register extends JFrame
         Container cp = getContentPane();
         cp.setLayout (new BorderLayout ());
 
-        //North panel
+        //North panel to hold the error
         JPanel jPanel1 = new JPanel();
         jPanel1.setLayout (new FlowLayout ());
 
@@ -44,7 +45,7 @@ public class Register extends JFrame
         errorLabel.setText ("");
         jPanel1.add (errorLabel);
 
-        //Center panel
+        //Center panel to take user and pass fields
         JPanel jPanel2 = new JPanel();
         jPanel2.setLayout (new GridLayout (2, 2, 5, 5));
 
@@ -64,7 +65,7 @@ public class Register extends JFrame
         passIn.setText ("");
         jPanel2.add (passIn);
 
-        //South panel
+        //South panel to contain the register button
         JPanel jPanel3 = new JPanel();
         jPanel3.setLayout (new FlowLayout ());
 
@@ -88,8 +89,8 @@ public class Register extends JFrame
         String username = userIn.getText();
         String password = new String(passIn.getPassword());
 
+        //Ensure details entered are valid and don't exist already
         if (!registerController.validUser(username, password)) {
-            // TODO Get actual error messages
             this.errorLabel.setText("Invalid User");            
             this.errorLabel.setForeground(Color.red);
             pack();
@@ -99,9 +100,5 @@ public class Register extends JFrame
         registerController.registerUser(username, password);
         JOptionPane.showMessageDialog(null, "Account Created");
         instance.setVisible(false);
-    }
-
-    public static void main(String[] args) {
-        new Register().setVisible(true);
     }
 }

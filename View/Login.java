@@ -93,10 +93,7 @@ public class Login extends JFrame
 
     private void register(java.awt.event.ActionEvent evt)
     {
+        //This will open the register GUI
         this.loginController.registerUser();
-    }
-
-    public static void main(String[] args) {
-        new Login().setVisible(true);
     }
 }
